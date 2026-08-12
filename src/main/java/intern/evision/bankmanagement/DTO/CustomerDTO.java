@@ -1,18 +1,50 @@
 package intern.evision.bankmanagement.DTO;
 
-import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Past;
+import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Size;
 
 import java.time.LocalDate;
 
 public class CustomerDTO {
 
     private Integer id;
+
+    @NotBlank(message = "First name is required")
+    @Size(min = 2, max = 50, message = "First name must be between 2 and 50 characters")
     private String firstName;
+
+    @NotBlank(message = "Last name is required")
+    @Size(min = 2, max = 50, message = "Last name must be between 2 and 50 characters")
     private String lastName;
+
+    @NotBlank(message = "Email is required")
+    @Email(message = "Invalid email format")
     private String email;
+
+    @NotBlank(message = "Phone number is required")
+    @Pattern(
+            regexp = "^[0-9]{10,15}$",
+            message = "Phone number must contain 10 to 15 digits"
+    )
     private String phone;
+
+    @NotBlank(message = "Address is required")
+    @Size(max = 200, message = "Address cannot exceed 200 characters")
     private String address;
+
+    @NotNull(message = "Date of birth is required")
+    @Past(message = "Date of birth must be in the past")
     private LocalDate dob;
+
+    @NotBlank(message = "National ID is required")
+    @Pattern(
+            regexp = "^[0-9]+$",
+            message = "National ID must contain only numbers"
+    )
     private String nationalId;
 
     public CustomerDTO(Integer id, String firstName, String lastName, String email, String phone, String address) {
@@ -85,7 +117,16 @@ public class CustomerDTO {
     public CustomerDTO() {
     }
 
-    public CustomerDTO(Integer id, String firstName, String lastName, String email, String phone, String address, LocalDate dob, String nationalId) {
+    public CustomerDTO(
+            Integer id,
+            String firstName,
+            String lastName,
+            String email,
+            String phone,
+            String address,
+            LocalDate dob,
+            String nationalId) {
+
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;

@@ -1,18 +1,50 @@
 package intern.evision.bankmanagement.DTO;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
 
 public class TransactionDTO {
+
     private Integer id;
+
+    @NotBlank(message = "Account ID is required")
     private String accountId;
+
     private String type;
+
+    @NotBlank(message = "Amount is required")
+    @Pattern(
+            regexp = "^(?!0+(\\.0+)?$)\\d+(\\.\\d+)?$",
+            message = "Amount must be greater than 0"
+    )
     private String amount;
+
     private String balanceAfter;
+
     private String description;
+
     private String timestamp;
+
+    public TransactionDTO() {
+    }
+
+    public TransactionDTO(
+            Integer id,
+            String accountId,
+            String type,
+            String amount,
+            String balanceAfter,
+            String description,
+            String timestamp) {
+
+        this.id = id;
+        this.accountId = accountId;
+        this.type = type;
+        this.amount = amount;
+        this.balanceAfter = balanceAfter;
+        this.description = description;
+        this.timestamp = timestamp;
+    }
 
     public Integer getId() {
         return id;
@@ -67,19 +99,6 @@ public class TransactionDTO {
     }
 
     public void setTimestamp(String timestamp) {
-        this.timestamp = timestamp;
-    }
-
-    public TransactionDTO() {
-    }
-
-    public TransactionDTO(Integer id, String accountId, String type, String amount, String balanceAfter, String description, String timestamp) {
-        this.id = id;
-        this.accountId = accountId;
-        this.type = type;
-        this.amount = amount;
-        this.balanceAfter = balanceAfter;
-        this.description = description;
         this.timestamp = timestamp;
     }
 }
