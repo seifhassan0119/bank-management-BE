@@ -70,11 +70,4 @@ public class AccountController {
                 .body(createdAccount);
     }
 
-    @GetMapping("/")
-    public ResponseEntity<Page<AccountDTO>> getAllAccounts(
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size) {
-
-        return ResponseEntity.ok(accountService.getAll(page, size));
-    }
 }

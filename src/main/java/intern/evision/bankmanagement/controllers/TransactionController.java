@@ -1,83 +1,45 @@
-package intern.evision.bankmanagement.controllers;
-
+package intern.evision.bankmanagement.controller;
 import intern.evision.bankmanagement.DTO.TransactionDTO;
 import intern.evision.bankmanagement.service.TransactionService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import intern.evision.bankmanagement.DTO.TransactionDTO;
-import org.springframework.data.domain.Page;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/transactions")
 public class TransactionController {
 
     @Autowired
-    TransactionService transactionService;
+    private TransactionService transactionService;
 
-    @GetMapping("/")
-    public ResponseEntity<List<TransactionDTO>> getAllTransactions() {
-        return ResponseEntity.ok(transactionService.getAll());
-    }
-
-    @GetMapping("/{id}")
-    public ResponseEntity<TransactionDTO> getOneTransaction(@PathVariable int id) {
-
-        Optional<TransactionDTO> transactionDTO = transactionService.getById(id);
-
-        if (transactionDTO.isEmpty()) {
-            return ResponseEntity.notFound().build();
-        }
-
-        return ResponseEntity.ok(transactionDTO.get());
-    }
-
-    @PutMapping("/{id}")
-    public ResponseEntity<TransactionDTO> updateTransaction(
-            @PathVariable int id,
+    @PostMapping("/deposit")
+    public ResponseEntity<TransactionDTO> deposit(
             @RequestBody TransactionDTO dto) {
 
-        TransactionDTO updatedTransaction = transactionService.update(dto, id);
-
-        if (updatedTransaction == null) {
-            return ResponseEntity.notFound().build();
-        }
-
-        return ResponseEntity.ok(updatedTransaction);
+        return ResponseEntity.ok(
+                transactionService.deposit(dto)
+        );
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteTransaction(@PathVariable int id) {
+    @PostMapping("/withdraw")
+    public ResponseEntity<TransactionDTO> withdraw(
+            @RequestBody TransactionDTO dto) {
 
-        boolean deleted = transactionService.delete(id);
-
-        if (!deleted) {
-            return ResponseEntity.notFound().build();
-        }
-
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.ok(
+                transactionService.withdraw(dto)
+        );
     }
 
-    @PostMapping("/")
-    public ResponseEntity<TransactionDTO> saveTransaction(
-            @RequestBody TransactionDTO transaction) {
 
-        TransactionDTO createdTransaction =
-                transactionService.addTransaction(transaction);
+    // Get transaction history for an account
+    @GetMapping("/history/{accountId}")
+    public ResponseEntity<List<TransactionDTO>> getTransactionHistory(
+            @PathVariable String accountId) {
 
-        return ResponseEntity.status(HttpStatus.CREATED)
-                .body(createdTransaction);
-    }
-    @GetMapping("/")
-    public ResponseEntity<Page<TransactionDTO>> getAllTransactions(
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size) {
-
-        return ResponseEntity.ok((Page) transactionService.getAll(page, size));
+        return ResponseEntity.ok(
+                transactionService.getTransactionHistory(accountId)
+        );
     }
 }

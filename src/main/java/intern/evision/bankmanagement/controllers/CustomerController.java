@@ -70,12 +70,5 @@ public class CustomerController {
                 .body(createdCustomer);
     }
 
-    @GetMapping("/")
-    public ResponseEntity<Page<CustomerDTO>> getAllCustomers(
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size) {
-
-        return ResponseEntity.ok(customerService.getAll(page, size));
-    }
 }
 
