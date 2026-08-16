@@ -33,7 +33,6 @@ public class TransactionController {
     }
 
 
-    // Get transaction history for an account
     @GetMapping("/history/{accountId}")
     public ResponseEntity<List<TransactionDTO>> getTransactionHistory(
             @PathVariable String accountId) {

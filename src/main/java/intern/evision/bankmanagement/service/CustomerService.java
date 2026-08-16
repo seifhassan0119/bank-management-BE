@@ -82,7 +82,7 @@ public class CustomerService {
     public Page<CustomerDTO> getAll(int page, int size) {
 
         Page<CustomerModel> customers =
-                customerRepository.findAll(PageRequest.of(page, size));
+                customerRepository.findAll(PageRequest.of(page, 10));
 
         return customers.map(customer -> new CustomerDTO(
                 customer.getId(),

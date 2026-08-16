@@ -92,7 +92,7 @@ public class AccountService {
     public Page<AccountDTO> getAll(int page, int size) {
 
         Page<AccountModel> accounts =
-                accountRepository.findAll(PageRequest.of(page, size));
+                accountRepository.findAll(PageRequest.of(page, 10));
 
         return accounts.map(account -> new AccountDTO(
                 account.getId(),

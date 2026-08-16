@@ -3,7 +3,6 @@ package intern.evision.bankmanagement.controllers;
 import intern.evision.bankmanagement.DTO.AccountDTO;
 import intern.evision.bankmanagement.service.AccountService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
