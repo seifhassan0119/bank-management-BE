@@ -20,9 +20,12 @@ public class CustomerService {
     @Autowired
     private CustomerRepository customerRepository;
 
-    public List<CustomerDTO> getAll(){
-        return customerRepository.findAll().stream().map(this::mapToDto).collect(Collectors.toList());
+    public Page<CustomerDTO> getAll(int page, int size) {
 
+        Page<CustomerModel> customers =
+                customerRepository.findAll(PageRequest.of(page, size));
+
+        return customers.map(this::mapToDto);
     }
 
     public Optional<CustomerDTO> getById(int Id){
@@ -35,22 +38,29 @@ public class CustomerService {
         return mapToDto(saveModel);
     }
 
-    public boolean delete(int id){
-        if (customerRepository.existsById(id)){
+    public boolean delete(int id) {
+
+        if (customerRepository.existsById(id)) {
             customerRepository.deleteById(id);
+            return true;
         }
+
         return false;
     }
 
-    public CustomerDTO update(CustomerDTO dto, int id){
+    public CustomerDTO update(CustomerDTO dto, int id) {
+
         return customerRepository.findById(id)
                 .map(customer -> {
+
                     CustomerModel updatedModel = mapToEntity(dto);
+
                     updatedModel.setId(customer.getId());
 
-                    CustomerModel savedCustomer = customerRepository.save(updatedModel);
+                    CustomerModel savedCustomer =
+                            customerRepository.save(updatedModel);
 
-                    return dto;
+                    return mapToDto(savedCustomer);
                 })
                 .orElse(null);
     }
@@ -79,19 +89,6 @@ public class CustomerService {
                 dto.getEmail()
                 );
     }
-    public Page<CustomerDTO> getAll(int page, int size) {
 
-        Page<CustomerModel> customers =
-                customerRepository.findAll(PageRequest.of(page, 10));
-
-        return customers.map(customer -> new CustomerDTO(
-                customer.getId(),
-                customer.getFirstName(),
-                customer.getLastName(),
-                customer.getEmail(),
-                customer.getPhone(),
-                customer.getAddress()
-        ));
-    }
 
 }

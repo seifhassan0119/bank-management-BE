@@ -14,6 +14,7 @@ import org.springframework.http.HttpStatus;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
@@ -25,9 +26,12 @@ public class CustomerController {
     @Autowired
     CustomerService customerService;
 
-    @GetMapping("/")
-    public ResponseEntity<List<CustomerDTO>> getAllCustomers() {
-        return ResponseEntity.ok(customerService.getAll());
+    @GetMapping
+    public Page<CustomerDTO> getAll(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+
+        return customerService.getAll(page, size);
     }
 
     @GetMapping("/{id}")
@@ -45,14 +49,16 @@ public class CustomerController {
     @PutMapping("/{id}")
     public ResponseEntity<CustomerDTO> updateCustomer(
             @PathVariable int id,
-            @RequestBody CustomerDTO dto){
+            @Valid @RequestBody CustomerDTO dto) {
 
-        CustomerDTO updatedCustomer = customerService.update(dto, id);
+        CustomerDTO updatedCustomer =
+                customerService.update(dto, id);
 
-    if (updatedCustomer == null) {
-        return ResponseEntity.notFound().build();
-    }
-    return ResponseEntity.ok(updatedCustomer);
+        if (updatedCustomer == null) {
+            return ResponseEntity.notFound().build();
+        }
+
+        return ResponseEntity.ok(updatedCustomer);
     }
 
     @DeleteMapping("/{id}")
