@@ -4,6 +4,7 @@ import intern.evision.bankmanagement.DTO.CustomerDTO;
 import intern.evision.bankmanagement.model.CustomerModel;
 import intern.evision.bankmanagement.repos.CustomerRepository;
 import intern.evision.bankmanagement.service.CustomerService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
@@ -12,6 +13,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.http.HttpStatus;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
+
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
@@ -65,13 +68,12 @@ public class CustomerController {
     }
 
     @PostMapping("/")
-    public ResponseEntity<CustomerDTO> saveCustomer(@RequestBody CustomerDTO customer) {
+    public List<CustomerDTO> addCustomers(
+            @Valid @RequestBody List<CustomerDTO> customers) {
 
-        CustomerDTO createdCustomer = customerService.addCustomer(customer);
-
-        return ResponseEntity.status(HttpStatus.CREATED)
-                .body(createdCustomer);
+        return customers.stream()
+                .map(customerService::addCustomer)
+                .collect(Collectors.toList());
     }
-
 }
 
